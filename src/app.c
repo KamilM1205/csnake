@@ -5,7 +5,24 @@
 #include <SDL_hints.h>
 #include <SDL_render.h>
 #include <SDL_video.h>
+#include <stdint.h>
 #include "trace.h"
+#include "world.h"
+
+int8_t
+app_event_handler(world_t* world) { 
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_QUIT: return 1;
+            default: break;
+        }
+    }
+
+    return 0;
+}
+
 
 int32_t
 app_init(p_app_t app) {
@@ -25,10 +42,15 @@ app_init(p_app_t app) {
     return 0;
 }
 
+void
+prepare_screen(p_app_t app) {
+    SDL_SetRenderDrawColor(app->renderer, 0, 0, 0, 255);
+    SDL_RenderClear(app->renderer);
+}
+
 int32_t
-app_run_loop(p_app_t app) {
+app_run_loop(p_app_t app, world_t* world) {
     int32_t renderer_flags, window_flags;
-    SDL_Event event;
     renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
     window_flags = 0;
 
@@ -46,11 +68,14 @@ app_run_loop(p_app_t app) {
         return -1;
     }
 
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-            case SDL_QUIT: return 0;
-            default: break;
+    while (1) {
+        prepare_screen(app);
+
+        if (app_event_handler(world)) {
+            break;
         }
+
+        SDL_RenderPresent(app->renderer);
     }
 
     return 0;

@@ -1,10 +1,12 @@
 #include "app.h"
 #include "trace.h"
+#include "world.h"
 
 int
 main(int argc, char** argv) {
     int32_t status;
-    p_app_t app;
+    p_app_t app = NULL;
+    world_t world;
 
     status = trace_init(argv);
     if (status != 0) {
@@ -12,17 +14,22 @@ main(int argc, char** argv) {
     }
     TRACE(TRACE_LEVEL_INFO, "Starting game...");
 
-    status = app_init(&app);
+    status = app_init(app);
     if (status != 0) {
         goto exit;
     }
 
-    status = app_run_loop(app);
+    status = world_init(&world);
     if (status != 0) {
         goto exit;
     }
 
-    status = app_deinit(&app);
+    status = app_run_loop(app, &world);
+    if (status != 0) {
+        goto exit;
+    }
+
+    status = app_deinit(app);
     if (status != 0) {
         goto exit;
     }

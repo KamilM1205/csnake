@@ -4,6 +4,7 @@
 #include <SDL_render.h>
 #include <SDL_video.h>
 #include <stdint.h>
+#include "world.h"
 
 typedef struct {
     int32_t swidth, sheight;
@@ -13,7 +14,7 @@ typedef struct {
 } app_t, *p_app_t;
 
 int32_t app_init(p_app_t app);
-int32_t app_run_loop(p_app_t app);
+int32_t app_run_loop(p_app_t app, world_t* world);
 int32_t app_deinit(p_app_t app);
 
 #endif /* _APP_H_ */

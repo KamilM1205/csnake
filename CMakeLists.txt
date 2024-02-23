@@ -25,6 +25,7 @@ set(SOURCES
   src/main.c 
   src/trace.c 
   src/app.c
+  src/world.c
 )
 
 add_executable(${PROJ_NAME} ${SOURCES})
