@@ -6,6 +6,7 @@
 #include <SDL_render.h>
 #include <SDL_video.h>
 #include <stdint.h>
+#include <string.h>
 #include "trace.h"
 #include "world.h"
 
@@ -28,7 +29,7 @@ int32_t
 app_init(p_app_t app) {
     TRACE(TRACE_LEVEL_INFO, "Initializing App...");
 
-    app = malloc(sizeof(app_t));
+    app = memset(app, 0, sizeof(app_t));
 
     app->swidth = 640;
     app->sheight = 480;
@@ -83,7 +84,7 @@ app_run_loop(p_app_t app, world_t* world) {
 
 int32_t
 app_deinit(p_app_t app) {
-    free(app);
+    SDL_Quit();
 
     return 0;
 }

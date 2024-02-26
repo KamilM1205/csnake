@@ -5,7 +5,7 @@
 int
 main(int argc, char** argv) {
     int32_t status;
-    p_app_t app = NULL;
+    app_t app;
     world_t world;
 
     status = trace_init(argv);
@@ -14,7 +14,7 @@ main(int argc, char** argv) {
     }
     TRACE(TRACE_LEVEL_INFO, "Starting game...");
 
-    status = app_init(app);
+    status = app_init(&app);
     if (status != 0) {
         goto exit;
     }
@@ -24,12 +24,12 @@ main(int argc, char** argv) {
         goto exit;
     }
 
-    status = app_run_loop(app, &world);
+    status = app_run_loop(&app, &world);
     if (status != 0) {
         goto exit;
     }
 
-    status = app_deinit(app);
+    status = app_deinit(&app);
     if (status != 0) {
         goto exit;
     }
