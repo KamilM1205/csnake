@@ -10,16 +10,20 @@ FILE* TRACE_FILE = NULL;
 
 int32_t
 trace_init(char** argv) {
-    char* curr_path;
-    char* exe_path;
+    char *curr_path, *exe_path, *path, *trace_path;
+    size_t pos, trace_path_size;
 
     if (!strrchr(argv[0], PATH_SLASH)) {
         exe_path = GET_CWD();
     } else {
-        char* path;
+        pos = strrchr(argv[0], PATH_SLASH) - argv[0];
 
-        int32_t pos = strrchr(argv[0], PATH_SLASH) - argv[0];
         path = malloc(pos);
+        if (path == NULL) {
+            printf("Couldn't allocate path in trace.c.");
+            return -1;
+        }
+
         memcpy(path, argv[0], pos);
         curr_path = GET_CWD();
         chdir(path);
@@ -28,13 +32,19 @@ trace_init(char** argv) {
 
         free(path);
     }
-    size_t trace_path_size = strlen(exe_path) + strlen("/trace.txt");
-    char* trace_path = malloc(trace_path_size);
+    
+    trace_path_size = strlen(exe_path) + strlen("/trace.txt");
+    trace_path = malloc(trace_path_size);
+    if (trace_path == NULL) {
+        printf("Couldn't allocate trace_path in trace.c\n");
+        return -1;
+    }
+
     strcat(trace_path, exe_path);
     strcat(trace_path, "/trace.txt");
 
     TRACE_FILE = fopen(trace_path, "w+");
-    //free(trace_path);
+    free(trace_path);
     if (TRACE_FILE == NULL) {
         printf("Error: couldn't open trace file.\n");
         return -1;
